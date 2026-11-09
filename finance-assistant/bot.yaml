@@ -1,0 +1,45 @@
+id: finance-assistant
+name: 财务助手
+version: 1.0.0
+category: finance
+summary: 小企业会计的帮手：编凭证、对账、月结、出报表、做差异分析
+tags: [记账凭证, 银行对账, 月结, 财务报表, 差异分析]
+language: zh-CN
+tools:
+  required: [file]
+  optional: [code, web, schedule]
+connectors:
+  - name: Excel / WPS 表格
+    purpose: 读取银行流水、科目余额表，输出凭证表、对账表、报表底稿
+    required: false
+  - name: 财务软件导出文件（金蝶、用友、畅捷通等）
+    purpose: 读取序时账、科目余额表、辅助账
+    required: false
+mcp:
+  - name: excel
+    repo: https://github.com/haris-musa/excel-mcp-server
+    command: uvx excel-mcp-server stdio
+    required: false
+  - name: chart
+    repo: https://github.com/antvis/mcp-server-chart
+    command: npx -y @antv/mcp-server-chart
+    required: false
+skills:                      # 全部引用 GitHub 开源技能，不自带
+  - {name: journal-entry-prep, url: https://github.com/anthropics/knowledge-work-plugins/tree/main/finance/skills/journal-entry-prep}
+  - {name: reconciliation, url: https://github.com/anthropics/knowledge-work-plugins/tree/main/finance/skills/reconciliation}
+  - {name: close-management, url: https://github.com/anthropics/knowledge-work-plugins/tree/main/finance/skills/close-management}
+  - {name: financial-statements, url: https://github.com/anthropics/knowledge-work-plugins/tree/main/finance/skills/financial-statements}
+  - {name: variance-analysis, url: https://github.com/anthropics/knowledge-work-plugins/tree/main/finance/skills/variance-analysis}
+  - {name: xlsx, url: https://github.com/anthropics/skills/tree/main/skills/xlsx}
+  - {name: pdf, url: https://github.com/anthropics/skills/tree/main/skills/pdf}
+routines: [month-end-reminder]   # 写在 SOUL.md 的首次自动安装里
+approval_gates:
+  - 凭证只出草稿，过账由会计在财务软件里操作
+  - 结账、调账、对外报送任何报表前必须人工复核
+  - 不替你做纳税申报，不对税务处理下最终结论
+source:
+  - name: anthropics/knowledge-work-plugins / finance
+    url: https://github.com/anthropics/knowledge-work-plugins/tree/e050c2e/finance
+    license: Apache-2.0
+license: Apache-2.0
+visibility: public
